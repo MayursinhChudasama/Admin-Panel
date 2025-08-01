@@ -1,0 +1,159 @@
+
+$gray: #d2d2d2;
+
+* {
+  margin: 0;
+  padding: 0;
+  font-family: 'DM Sans', sans-serif;
+
+  ::-webkit-scrollbar {
+    display: none;
+
+    -ms-overflow-style: none;
+    /* Internet Explorer 10+ */
+    scrollbar-width: none;
+    /* Firefox */
+  }
+}
+
+body {
+  width: 100vw;
+  overflow-x: hidden;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.container {
+  padding: 0px 80px;
+  margin: auto;
+}
+
+.input_checkbox[type="checkbox"] {
+  border: 1px solid black !important;
+}
+
+select:focus-visible {
+  outline: none;
+  border: none;
+}
+
+input:focus-visible {
+  outline: none;
+  border: none;
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+}
+
+.hoverAnimation {
+  animation: buttonFillColor 0.5s ease-in-out;
+}
+
+.bg-blue {
+  background-color: #70b1f7 !important;
+}
+
+.bg-sky {
+  background-color: #aecbeb !important;
+}
+
+.table {
+  margin-bottom: 50px;
+}
+
+.spinnerAnimation {
+  animation: spinnerAnimation 1s infinite alternate;
+}
+
+/* Hide spinners for Chrome, Safari, Edge, and Opera */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Hide spinners for Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* Optional: disable number input appearance */
+input[type="number"] {
+  appearance: none;
+}
+
+
+
+
+@keyframes spinnerAnimation {
+  0% {
+    opacity: 0;
+    // transform: scale(0.9);
+  }
+
+  100% {
+    opacity: 1;
+    // transform: scale(1.1);
+  }
+}
+
+.green-200 {
+  background-color: rgb(187 247 208) !important;
+}
+
+/* custom-styles.css */
+.custom-shadow {
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1),
+    0px 4px 6px rgba(0, 0, 0, 0.05),
+    0px 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  /* Internet Explorer 10+ */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+/* Hides the number input's up/down arrows */
+.custom-number-input::-webkit-outer-spin-button,
+.custom-number-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.custom-number-input[type="number"] {
+  -moz-appearance: textfield;
+  /* Firefox */
+  appearance: textfield;
+  border: 1px solid black;
+
+  /* Chrome */
+}
+
+/* Red border when the refund amount exceeds the product price */
+.custom-number-input.border-red-500 {
+  border-color: red !important;
+}
+
+/* Base styles for the dropdown */
+.dropdown-toggle {
+  border: 1px solid #ccc;
+  background-color: #fff;
+  cursor: pointer;
+  outline: none;
+}
+
+.dropdown-toggle:focus {
+  cursor: default;
+  border: 1px solid #ccc;
+}
+
+.dropdown-toggle:active {
+  border: 1px solid #ccc;
+}
