@@ -1,22 +1,23 @@
-import { RxHamburgerMenu } from "react-icons/rx";
-import { IoPersonCircleOutline } from "react-icons/io5";
-import { MdOutlineLogout } from "react-icons/md";
-import { FaChevronDown } from "react-icons/fa";
+// import { FaBars } from "react-icons/fa";
+// import { IoPersonCircleOutline } from "react-icons/io5";
+// import { MdOutlineLogout } from "react-icons/md";
+// import { FaChevronDown } from "react-icons/fa";
 
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { SITE_URL } from "../common/constant.js";
+import { SITE_URL } from "../common/constant";
 import {
   useFetchAdminRolesById,
   useFetchAdminRoles,
-} from "../api/AdminRoleApi.js";
-import { useFetchAdminUsers } from "../api/AdminUserApi.js";
+} from "../api/AdminRoleApi";
+import { useFetchAdminUsers } from "../api/AdminUserApi";
 import { useAuthContext } from "../hooks/useAuthContext";
+import { AdminUser } from "../api/AdminUserApi";
 
 const Navbar: React.FC = () => {
   const location = useLocation();
   const { Adminusers, isLoading: adminusersLoading } = useFetchAdminUsers();
-  const [AdminData, setAdminData] = useState({});
+  const [AdminData, setAdminData] = useState<AdminUser | null>(null);
   const {
     state: { user },
     loadUser,
@@ -69,17 +70,11 @@ const Navbar: React.FC = () => {
                   <button
                     type='button'
                     aria-controls='drawer-navigation'
-                    className='text-black text-2xl pl-2'>
-                    <RxHamburgerMenu className='text-2xl' />
+                    className='text-red-50 text-2xl pl-2'>
+                    {/* <FaBars className='text-2xl' /> */} Menu
                   </button>
                 </div>
-                <span className='ml-2'>
-                  <img
-                    src={`${SITE_URL}/logo.svg`}
-                    className='size-8 mix-blend-multiply bg-[#F9F9F9]'
-                    alt='Logo'
-                  />
-                </span>
+                <span className='ml-2'></span>
               </div>
               <div className='flex items-center gap-4 cursor-pointer'>
                 <div className='flex gap-5 mx-4 items-center'>
@@ -127,7 +122,7 @@ const Navbar: React.FC = () => {
                   className='flex items-center gap-4 cursor-pointer'
                   onClick={toggleLogout}>
                   <div className='text-4xl'>
-                    <IoPersonCircleOutline />
+                    {/* <IoPersonCircleOutline /> */}
                   </div>
                   <div>
                     <h1>{AdminData?.name}</h1>
@@ -230,9 +225,9 @@ const Navbar: React.FC = () => {
                     <li>
                       <Link
                         className='flex items-center p-2 mt-4 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group'
-                        to='/logout'>
+                        to='/'>
                         <span className='ms-3 whitespace-nowrap'>
-                          <MdOutlineLogout />
+                          {/* <MdOutlineLogout /> */} User
                         </span>
                         <span className='ms-3 whitespace-nowrap'>Logout</span>
                       </Link>
@@ -259,7 +254,7 @@ const Navbar: React.FC = () => {
                 onClick={toggleSidebar}
                 aria-controls='drawer-navigation'
                 className='text-black text-2xl pl-2'>
-                <RxHamburgerMenu className='text-2xl' />
+                {/* <FaBars className='text-2xl' /> */} Logo
               </button>
               <span className='ml-2'>
                 <img
@@ -341,7 +336,7 @@ const Navbar: React.FC = () => {
                         {/* Icon beside "More" */}
                         <span className='ml-2'>
                           {isDropdownOpen ? (
-                            <FaChevronDown />
+                            "->"
                           ) : (
                             <svg
                               width='8'

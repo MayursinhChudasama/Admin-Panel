@@ -1,14 +1,13 @@
-import { useMutation, useQuery, UseQueryOptions } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { API_URL } from "../common/constant.js";
 import Cookies from "js-cookie";
 import { useLogout } from "../hooks/useLogOut";
 
-type AdminUser = {
+export type AdminUser = {
   id: string;
   name: string;
   email: string;
   role: string;
-  // add other fields as needed
 };
 
 const useFetchAdminUsers = () => {
@@ -30,39 +29,28 @@ const useFetchAdminUsers = () => {
 
     if (!response.ok) {
       if (response.status === 401) {
-        // await logout();
+        await logout();
         return [];
       }
       throw new Error("Failed to fetch admin user users data");
     }
-
     return response.json();
-  };
-
-  const options: UseQueryOptions<AdminUser[], Error> = {
-    onError: (error) => {
-      console.error("Error fetching admin users data:", error.message);
-    },
-    onSuccess: (data) => {
-      console.log("Admin users data fetched successfully:", data);
-    },
   };
 
   const {
     data: Adminusers,
     isLoading,
     error: ErrorInAdmin,
-  } = useQuery<AdminUser[], Error>(
-    ["fetchAdminUsers"],
-    getUsersAdminData,
-    options
-  );
+  } = useQuery<AdminUser[], Error>({
+    queryKey: ["fetchAdminUsers"],
+    queryFn: getUsersAdminData,
+  });
 
   return { Adminusers, isLoading, ErrorInAdmin };
 };
 
 const useFetchAdminUserById = (id: string) => {
-  //   const { logout } = useLogout();
+  const { logout } = useLogout();
   const getUsersAdminData = async (): Promise<AdminUser> => {
     const adminKey = process.env.REACT_APP_ADMIN_KEY;
     if (!adminKey) {
@@ -80,8 +68,13 @@ const useFetchAdminUserById = (id: string) => {
 
     if (!response.ok) {
       if (response.status === 401) {
-        // await logout();
-        return;
+        await logout();
+        return {
+          id: "undefined as string",
+          name: "undefined as string",
+          email: "undefined as string",
+          role: "undefined as string",
+        };
       }
       throw new Error("Failed to fetch Admin Users data");
     }
@@ -93,15 +86,10 @@ const useFetchAdminUserById = (id: string) => {
     data: Adminusers,
     isLoading,
     error,
-  } = useQuery<AdminUser, Error>(
-    ["fetchUsersAdminData", id],
-    getUsersAdminData,
-    {
-      onError: (error) => {
-        console.error("Error fetching Admin users data:", error.message);
-      },
-    }
-  );
+  } = useQuery<AdminUser, Error>({
+    queryKey: ["fetchUsersAdminData", id],
+    queryFn: getUsersAdminData,
+  });
 
   return { Adminusers, isLoading, error };
 };
@@ -114,14 +102,22 @@ const deleteUser = async (logout: () => void, id: string, adminKey: string) => {
   try {
     const xApiKey = process.env.REACT_APP_X_API_KEY;
     console.log(`Deleting user with id ${id}`); // Log the user ID
+
+    // Create headers object with required headers
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+      "admin-key": adminKey,
+      Authorization: `Bearer ${Cookies.get("A_accessToken")}`,
+    };
+
+    // Only add api-key if it's defined
+    if (xApiKey) {
+      headers["api-key"] = xApiKey;
+    }
+
     const response = await fetch(`${API_URL}/admin/delete/${id}`, {
       method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        "admin-key": adminKey,
-        "api-key": xApiKey,
-        Authorization: `Bearer ${Cookies.get("A_accessToken")}`,
-      },
+      headers,
     });
 
     console.log(`Response status: ${response.status}`); // Log the response status
@@ -148,12 +144,19 @@ const deleteUser = async (logout: () => void, id: string, adminKey: string) => {
 const useDeleteAdminUserById = () => {
   const { logout } = useLogout();
   const adminKey = process.env.REACT_APP_ADMIN_KEY;
+
   const {
     mutate: deleteAdminUserMutation,
-    isLoading: isDeleting,
+    isPending: isDeleting,
     error,
-  } = useMutation((id) => deleteUser(logout, id, adminKey), {
-    onError: (error) => {
+  } = useMutation({
+    mutationFn: (id: string) => {
+      if (!adminKey) {
+        throw new Error("Admin key is not available");
+      }
+      return deleteUser(logout, id, adminKey);
+    },
+    onError: (error: Error) => {
       console.error("Error deleting user:", error.message);
     },
   });
@@ -168,7 +171,7 @@ type UpdateAdminUserArgs = {
 
 const useUpdateAdminUser = () => {
   const { logout } = useLogout();
-  const updateUser = async ({ id, AdminusersData }) => {
+  const updateUser = async ({ id, AdminusersData }: UpdateAdminUserArgs) => {
     const adminKey = process.env.REACT_APP_ADMIN_KEY;
     console.log("Admin Key:", adminKey);
     if (!adminKey) {
@@ -197,8 +200,9 @@ const useUpdateAdminUser = () => {
     return response.json();
   };
 
-  const mutation = useMutation(updateUser, {
-    onError: (error) => {
+  const mutation = useMutation({
+    mutationFn: updateUser,
+    onError: (error: Error) => {
       console.error("Error updating Admin:", error.message);
       // You can also log more details if needed
       console.error("Full Error:", error);
@@ -210,7 +214,7 @@ const useUpdateAdminUser = () => {
 
 const useAddAdmin = () => {
   const { logout } = useLogout();
-  const addAdmin = async (adminData) => {
+  const addAdmin = async (adminData: AdminUser) => {
     const adminKey = process.env.REACT_APP_ADMIN_KEY;
     if (!adminKey) {
       throw new Error("REACT_APP_ADMIN_KEY environment variable is not set");
@@ -238,8 +242,9 @@ const useAddAdmin = () => {
     return response.json();
   };
 
-  const mutation = useMutation(addAdmin, {
-    onError: (error) => {
+  const mutation = useMutation({
+    mutationFn: addAdmin,
+    onError: (error: Error) => {
       console.error("Error adding admin:", error.message);
     },
   });
