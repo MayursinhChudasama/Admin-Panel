@@ -19,9 +19,9 @@ const LogIn: React.FC = () => {
               onChange={(e) => setEmail(e.target.value)}
               className='w-full p-2.5 border border-gray-700 rounded-md bg-[#8D93AB] focus:border-indigo-500 focus:ring-indigo-500'
             />
-            {/* {errors.email && (
+            {errors.email && (
               <p className='text-red-500 text-sm mt-1'>{errors.email}</p>
-            )} */}
+            )}
           </div>
           <div className='flex items-center justify-center content-center gap-5'>
             <div className='relative w-full'>
