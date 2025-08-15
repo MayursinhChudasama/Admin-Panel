@@ -71,7 +71,7 @@ const Navbar: React.FC = () => {
                     type='button'
                     aria-controls='drawer-navigation'
                     className='text-red-50 text-2xl pl-2'>
-                    {/* <FaBars className='text-2xl' /> */} Menu
+                    Menu
                   </button>
                 </div>
                 <span className='ml-2'></span>
